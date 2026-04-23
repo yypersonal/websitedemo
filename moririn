@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ヒーリングルームまりりんの部屋</title>
+  
+  <!-- Tailwind CSS の読み込み -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React関連の読み込み -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts の読み込み -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+    body { font-family: 'Noto Sans JP', sans-serif; }
+    .font-serif { font-family: 'Noto Serif JP', serif; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- Reactのコード -->
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // === アイコンの定義 (Lucide IconsのSVG) ===
+    const Icon = ({ children, size = 24, className = "" }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        {children}
+      </svg>
+    );
+    const Heart = (props) => <Icon {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></Icon>;
+    const Sparkles = (props) => <Icon {...props}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></Icon>;
+    const Wind = (props) => <Icon {...props}><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></Icon>;
+    const Clock = (props) => <Icon {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></Icon>;
+    const MapPin = (props) => <Icon {...props}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></Icon>;
+    const Mail = (props) => <Icon {...props}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></Icon>;
+    const Instagram = (props) => <Icon {...props}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></Icon>;
+    const Menu = (props) => <Icon {...props}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>;
+    const X = (props) => <Icon {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>;
+    const ArrowRight = (props) => <Icon {...props}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></Icon>;
+
+
+    // === メインのアプリケーションコンポーネント ===
+    function App() {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          setIsScrolled(window.scrollY > 50);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const navLinks = [
+        { name: 'コンセプト', href: '#concept' },
+        { name: 'メニュー', href: '#services' },
+        { name: 'プロフィール', href: '#profile' },
+        { name: 'ご予約・アクセス', href: '#access' },
+      ];
+
+      return (
+        <div className="min-h-screen bg-stone-50 font-sans text-stone-800 selection:bg-rose-200 selection:text-stone-900">
+          {/* Navigation */}
+          <nav
+            className={`fixed w-full z-50 transition-all duration-300 ${
+              isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'
+            }`}
+          >
+            <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
+              <a href="#" className="text-xl md:text-2xl font-serif tracking-wider text-stone-800">
+                まりりんの部屋
+              </a>
+
+              {/* Desktop Nav */}
+              <div className="hidden md:flex items-center space-x-8">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="text-sm tracking-widest text-stone-600 hover:text-stone-900 transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+                <a
+                  href="#access"
+                  className="px-6 py-2 bg-stone-800 text-white text-sm tracking-widest rounded-full hover:bg-stone-700 transition-colors"
+                >
+                  ご予約
+                </a>
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-stone-800 focus:outline-none"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+
+            {/* Mobile Nav */}
+            {mobileMenuOpen && (
+              <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-stone-100 py-4 px-6 flex flex-col space-y-4">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="text-stone-600 hover:text-stone-900 py-2 border-b border-stone-50 text-sm tracking-widest"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </a>
+                ))}
+                <a
+                  href="#access"
+                  className="mt-4 px-6 py-3 bg-stone-800 text-white text-center text-sm tracking-widest rounded-full"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  ご予約はこちら
+                </a>
+              </div>
+            )}
+          </nav>
+
+          {/* Hero Section */}
+          <section className="relative h-screen flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              <img
+                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1920"
+                alt="Hero Background"
+                className="w-full h-full object-cover object-center opacity-80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-stone-100/90 to-stone-50/40"></div>
+            </div>
+
+            <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-20">
+              <span className="block text-sm md:text-base tracking-[0.3em] text-stone-600 mb-6">
+                HEALING ROOM
+              </span>
+              <h1 className="text-4xl md:text-6xl font-serif text-stone-800 leading-tight mb-8">
+                心に、光と風を。<br />
+                <span className="text-2xl md:text-4xl mt-4 block text-stone-600">
+                  あなただけの隠れ家サロン
+                </span>
+              </h1>
+              <p className="text-base md:text-lg text-stone-600 mb-12 tracking-wider leading-relaxed max-w-2xl mx-auto">
+                日常の喧騒から離れ、本来の自分を取り戻す場所。<br className="hidden md:block" />
+                「まりりんの部屋」では、心に寄り添うカウンセリングと<br className="hidden md:block" />
+                深いリラクゼーションを提供します。
+              </p>
+              <a
+                href="#concept"
+                className="inline-flex items-center space-x-2 text-stone-600 hover:text-stone-900 transition-colors border-b border-stone-400 hover:border-stone-900 pb-1"
+              >
+                <span>詳しく見る</span>
+                <ArrowRight size={16} />
+              </a>
+            </div>
+          </section>
+
+          {/* Concept Section */}
+          <section id="concept" className="py-24 md:py-32 bg-white">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="flex flex-col md:flex-row items-center gap-16">
+                <div className="w-full md:w-1/2 relative">
+                  <div className="aspect-[4/5] rounded-t-full overflow-hidden shadow-2xl relative z-10">
+                    <img
+                      src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&q=80&w=800"
+                      alt="Healing Candles"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-stone-100 rounded-full z-0"></div>
+                  <div className="absolute top-1/4 -left-8 w-32 h-32 border border-stone-200 rounded-full z-20"></div>
+                </div>
+                
+                <div className="w-full md:w-1/2">
+                  <h2 className="text-3xl md:text-4xl font-serif text-stone-800 mb-6">
+                    ありのままのあなたを<br />受け入れる場所
+                  </h2>
+                  <div className="w-12 h-px bg-stone-400 mb-8"></div>
+                  <p className="text-stone-600 leading-loose tracking-wide mb-6">
+                    日々の生活の中で、私たちは少しずつ疲れやストレスを溜め込んでしまいます。誰かのために頑張るあなたこそ、自分自身を労わる時間が必要です。
+                  </p>
+                  <p className="text-stone-600 leading-loose tracking-wide mb-8">
+                    まりりんの部屋は、完全予約制のプライベート空間。周りの目を気にすることなく、心の奥底にある声に耳を傾けることができます。優しい香りと心地よい音楽の中で、心身のバランスを整えましょう。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Services Section */}
+          <section id="services" className="py-24 md:py-32 bg-stone-100">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="text-center mb-16">
+                <span className="text-xs tracking-[0.2em] text-stone-500 uppercase">Menu</span>
+                <h2 className="text-3xl font-serif text-stone-800 mt-2 mb-6">ヒーリングメニュー</h2>
+                <div className="w-12 h-px bg-stone-400 mx-auto"></div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Service 1 */}
+                <div className="bg-white p-10 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                  <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center mb-6">
+                    <Heart className="text-rose-400" size={24} />
+                  </div>
+                  <h3 className="text-xl font-serif text-stone-800 mb-3">スピリチュアル<br/>カウンセリング</h3>
+                  <p className="text-stone-500 text-sm mb-6 flex items-center"><Clock size={14} className="mr-2"/> 60分 / ¥10,000</p>
+                  <p className="text-stone-600 text-sm leading-relaxed tracking-wide">
+                    現在の悩みや迷いに対し、直感とカードを用いて深くリーディングします。心のブロックを外し、前に進むためのヒントをお伝えします。
+                  </p>
+                </div>
+
+                {/* Service 2 */}
+                <div className="bg-white p-10 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                  <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center mb-6">
+                    <Sparkles className="text-amber-400" size={24} />
+                  </div>
+                  <h3 className="text-xl font-serif text-stone-800 mb-3">クリスタル<br/>ヒーリング</h3>
+                  <p className="text-stone-500 text-sm mb-6 flex items-center"><Clock size={14} className="mr-2"/> 90分 / ¥15,000</p>
+                  <p className="text-stone-600 text-sm leading-relaxed tracking-wide">
+                    天然石の持つ波動を利用し、体内のエネルギーセンター（チャクラ）を浄化・調整します。深いリラクゼーションを得たい方に最適です。
+                  </p>
+                </div>
+
+                {/* Service 3 */}
+                <div className="bg-white p-10 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                  <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center mb-6">
+                    <Wind className="text-teal-400" size={24} />
+                  </div>
+                  <h3 className="text-xl font-serif text-stone-800 mb-3">遠隔<br/>ヒーリング</h3>
+                  <p className="text-stone-500 text-sm mb-6 flex items-center"><Clock size={14} className="mr-2"/> 30分 / ¥5,000</p>
+                  <p className="text-stone-600 text-sm leading-relaxed tracking-wide">
+                    ご自宅などリラックスできる環境にいながら、エネルギーを受け取ることができます。遠方の方や、忙しくて来店が難しい方におすすめです。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Profile Section */}
+          <section id="profile" className="py-24 md:py-32 bg-white">
+            <div className="max-w-4xl mx-auto px-6 text-center">
+              <div className="mb-12">
+                <img
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400"
+                  alt="Profile"
+                  className="w-40 h-40 rounded-full object-cover mx-auto shadow-lg border-4 border-stone-50"
+                />
+              </div>
+              <h2 className="text-2xl font-serif text-stone-800 mb-2">まりりん (Maririn)</h2>
+              <p className="text-stone-500 text-sm tracking-widest mb-8">HEALER / COUNSELOR</p>
+              <p className="text-stone-600 leading-loose tracking-wide max-w-2xl mx-auto">
+                幼少期から目に見えないエネルギーを感じ取る力を持ち、自身の様々な経験を経てヒーラーとしての道を歩み始めました。<br/>
+                これまでに10年以上にわたり、多くの方の悩みや心に寄り添い、サポートをさせていただいています。<br/>
+                「どんな時も、あなたは一人ではない」。そのメッセージをお伝えしながら、本来の笑顔を取り戻すお手伝いをいたします。
+              </p>
+            </div>
+          </section>
+
+          {/* Access & Contact Section */}
+          <section id="access" className="py-24 md:py-32 bg-stone-800 text-stone-100">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="flex flex-col md:flex-row gap-16">
+                {/* Info */}
+                <div className="w-full md:w-1/2">
+                  <h2 className="text-3xl font-serif mb-8 text-white">ご予約・お問い合わせ</h2>
+                  <p className="text-stone-400 mb-10 leading-relaxed">
+                    当サロンは完全予約制となっております。<br/>
+                    ご予約やご不明な点がございましたら、お気軽にお問い合わせください。
+                  </p>
+
+                  <div className="space-y-6">
+                    <div className="flex items-start space-x-4">
+                      <MapPin className="text-stone-400 mt-1" size={20} />
+                      <div>
+                        <h4 className="font-bold text-white tracking-wider mb-1">所在地</h4>
+                        <p className="text-stone-400 text-sm">※プライベートサロンのため、詳細な住所はご予約時にお伝えいたします。</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-4">
+                      <Clock className="text-stone-400 mt-1" size={20} />
+                      <div>
+                        <h4 className="font-bold text-white tracking-wider mb-1">営業時間</h4>
+                        <p className="text-stone-400 text-sm">10:00 - 19:00 (最終受付 18:00)<br/>定休日：不定休</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-4">
+                      <Mail className="text-stone-400 mt-1" size={20} />
+                      <div>
+                        <h4 className="font-bold text-white tracking-wider mb-1">メール</h4>
+                        <p className="text-stone-400 text-sm">hello@maririn-healing.example.com</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simple Contact Form UI */}
+                <div className="w-full md:w-1/2 bg-stone-50 rounded-2xl p-8 md:p-10 text-stone-800">
+                  <h3 className="text-xl font-serif mb-6 text-center">ご予約フォーム</h3>
+                  <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+                    <div>
+                      <label className="block text-sm text-stone-600 mb-2">お名前</label>
+                      <input type="text" className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white" placeholder="山田 花子" />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-stone-600 mb-2">メールアドレス</label>
+                      <input type="email" className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white" placeholder="your@email.com" />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-stone-600 mb-2">ご希望のメニュー</label>
+                      <select className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white">
+                        <option>スピリチュアルカウンセリング</option>
+                        <option>クリスタルヒーリング</option>
+                        <option>遠隔ヒーリング</option>
+                        <option>その他・ご相談</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-stone-600 mb-2">メッセージ</label>
+                      <textarea rows="4" className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-stone-400 bg-white" placeholder="ご希望の日時やご相談内容をご記入ください"></textarea>
+                    </div>
+                    <button className="w-full bg-stone-800 text-white py-4 rounded-lg hover:bg-stone-700 transition-colors tracking-widest text-sm">
+                      送信する
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <footer className="bg-stone-900 text-stone-500 py-12 border-t border-stone-800 text-center">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="flex justify-center space-x-6 mb-8">
+                <a href="#" className="hover:text-white transition-colors"><Instagram size={20} /></a>
+                <a href="#" className="hover:text-white transition-colors"><Mail size={20} /></a>
+              </div>
+              <p className="text-sm tracking-wider mb-2">Healing Room まりりんの部屋</p>
+              <p className="text-xs">&copy; 2024 Maririn's Room. All rights reserved.</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // Reactアプリケーションのレンダリング
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
